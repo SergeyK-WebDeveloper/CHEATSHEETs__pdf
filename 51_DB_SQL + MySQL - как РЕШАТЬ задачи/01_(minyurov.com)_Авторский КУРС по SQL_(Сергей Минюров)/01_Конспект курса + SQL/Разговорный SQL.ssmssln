@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# SQL Server Management Studio Solution File, Format Version 12.00
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "1-Простые запросы", "1-Простые запросы\1-Простые запросы.ssmssqlproj", "{B96AAAAD-5E48-47F2-BEFF-500062847E9E}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "2-Типы данных и функции", "2-Типы данных и функции\2-Типы данных и функции.ssmssqlproj", "{B6433E43-CE0F-4967-ABEA-2BD002980816}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "3-Группировка", "3-Группировка\3-Группировка.ssmssqlproj", "{ADF3CF74-7095-4B0C-87A5-FC668DEE8F23}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "4-Подзапросы", "4-Подзапросы\4-Подзапросы.ssmssqlproj", "{D8E66DC2-7995-4E8F-AFC5-3C52C5134382}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "5-Соединения", "5-Соединения\5-Соединения.ssmssqlproj", "{893BB6F5-7C32-4E71-B22C-E5827BE74A82}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "6-Введение в разработку", "6-Введение в разработку\6-Введение в разработку.ssmssqlproj", "{821497B6-A95D-476A-89EF-0722B5EE8463}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "7-Введение в оптимизацию", "7-Введение в оптимизацию\7-Введение в оптимизацию.ssmssqlproj", "{1453A24B-B6DE-448A-A951-AF0CDCFB03AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B96AAAAD-5E48-47F2-BEFF-500062847E9E}.Default|Default.ActiveCfg = Default
+		{B6433E43-CE0F-4967-ABEA-2BD002980816}.Default|Default.ActiveCfg = Default
+		{ADF3CF74-7095-4B0C-87A5-FC668DEE8F23}.Default|Default.ActiveCfg = Default
+		{D8E66DC2-7995-4E8F-AFC5-3C52C5134382}.Default|Default.ActiveCfg = Default
+		{893BB6F5-7C32-4E71-B22C-E5827BE74A82}.Default|Default.ActiveCfg = Default
+		{20804483-BAAF-49A4-B8A3-2F1BD59A2010}.Default|Default.ActiveCfg = Default
+		{821497B6-A95D-476A-89EF-0722B5EE8463}.Default|Default.ActiveCfg = Default
+		{1453A24B-B6DE-448A-A951-AF0CDCFB03AE}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

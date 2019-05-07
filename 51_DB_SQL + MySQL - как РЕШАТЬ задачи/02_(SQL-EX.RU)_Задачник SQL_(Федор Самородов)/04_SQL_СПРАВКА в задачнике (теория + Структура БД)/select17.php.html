@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 
+ <style>
+DIV {
+    width: 90%;
+    position: relative;
+    left: 5%;
+	
+    COLOR: black;
+    FONT-FAMILY: Verdana,Arial,Helvetica;
+    FONT-SIZE: 12px;
+    FONT-WEIGHT: normal;
+    TEXT-ALIGN: justify;
+    TEXT-DECORATION: none;
+}
+
+H2 {
+    COLOR: #004040;
+    FONT-FAMILY: Arial,Helvetica;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold;
+    LINE-HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    text-decoration: none;
+}
+h2 {
+    display: block;
+    
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+}
+
+.keyword {
+    color: #00f;
+}
+</style>
+
+
+	<meta charset="windows-1251">
+ <Title>Справка&nbsp;по&nbsp;SQL(DML): Как удалить дубликаты строк из таблицы?</Title>
+        <link rel="stylesheet" type="text/css" href="../templates/style.css">
+		<link rel="stylesheet" type="text/css" href="../templates/help.css">
+
+    	<link rel="stylesheet" title="Default" href="../help/styles/default.css">
+        <script type="text/javascript" src="../help/highlight.js"></script>
+        <meta name="Description" content="Самоучитель SQL. Синтаксис операторов SELECT, INSERT, UPDATE, DELETE в примерах и задачах. Дистанционное обучение языку баз данных SQL. Интерактивные упражнения по оператору SELECT языка SQL. Тестирование по SQL. ">
+        <meta name="Keywords" content="SQL, руководство, справочник по SQL, справка по языку SQL, sql запросы, упражнения, тестирование, обучение, операторы sql, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, INSERT, UPDATE, DELETE, структурированный язык запросов">
+        <META NAME="abstract" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <META NAME="title" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <script LANGUAGE="JAVASCRIPT" src="/js/main.js"></script>
+ </head>
+ <body bgcolor="#F5F5F5">
+<!-- LM -->
+<script async="async" src="https://w.uptolike.com/widgets/v1/zp.js?pid=48720"></script>
+<!-- LM -->
+
+ <A name="ref_beg"></a>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_76084"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 76084,
+            place: "advertur_76084",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<form name="frmtpl">
+<table width="98%" border="0" cellpadding="5" align="center">
+    <tr>
+        <td width="33%" bgcolor="#CCCCCC" valign="middle"><b><a class='none' href="/help/">Синтаксис SQL</a></b></td>
+        <td width="33%" bgcolor="#CCCCCC" align="center" valign="middle">
+         Language&nbsp;<select name="lsttpl" OnChange="Sel_Lang(document.frmtpl.lsttpl.selectedIndex)"><option value="0" selected> Русский <option value="1" > English </select>
+        </td>
+        <td width="33%" bgcolor="#CCCCCC" align="right" valign="middle"><a href=select0.php.html>Оглавл.</a>&nbsp;<a href=select1.php.html>1</a>&nbsp;<a href=select2.php.html>2</a>&nbsp;<a href=select3.php.html>3</a>&nbsp;<a href=select4.php.html>4</a>&nbsp;<a href=select5.php.html>5</a>&nbsp;<a href=select6.php.html>6</a>&nbsp;<a href=select7.php.html>7</a>&nbsp;<a href=select8.php.html>8</a>&nbsp;<a href=select9.php.html>9</a>&nbsp;<a href=select10.php.html>10</a>&nbsp;<a href=select11.php.html>11</a>&nbsp;<a href=select12.php.html>12</a>&nbsp;<a href=select13.php.html>13</a>&nbsp;<a href=select14.php.html>14</a>&nbsp;<a href=select15.php.html>15</a>&nbsp;<a href=select16.php.html>16</a>&nbsp;[<b>17</b>]&nbsp;<a href=select18.php.html>18</a>&nbsp;<a href=select19.php.html>19</a>&nbsp;<a href=select20.php.html>20</a>&nbsp;
+<!--Rambler Top100-->
+<div style="display:none">
+<script id="top100Counter" type="text/javascript" src="http://cnt.rambler.ru/top100.jcn?718545">
+</script>
+<noscript><a href="http://top100.rambler.ru/top100/">
+<img src="http://cnt.rambler.ru/top100.cnt?718545" alt="Rambler's Top100" width="81" height="63" border="0" /></a></noscript>
+</div>
+<!--end of Top100-->
+        </td>
+</tr>
+</table>
+</form><h1>Как удалить дубликаты строк из таблицы?</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="let" href="http://www.sql-ex.ru/developers.php.html#mois">Моисеенко С.И.</a> (13-06-2009)</small>
+<p class="par">Обычно такой вопрос возникает, когда при проектировании таблиц допущены ошибки, в частности, отсутствует первичный ключ, и уже имеются данные, которые препятствуют его созданию. При этом ограничения предметной области требуют уникальности соответствующих данных. </p>
+<p class="par">Пусть имеется следующая таблица T:</p>
+<pre class="res">
+<b><u>name</u></b>
+John
+Smith
+John
+Smith
+Smith
+Tom
+</pre>
+<p class="par">Для простоты я не включаю сюда другие столбцы, предполагая, что данные в них однозначно определяются значением в столбце <i>name</i>. Требуется сделать столбец <i>name</i> уникальным (скажем, первичным ключом), предварительно удалив дубликаты.</p>
+<p class="par">Распространенным решением данной проблемы является создание вспомогательной таблицы требуемой структуры, в которую копируются уникальные строки из таблицы T с последующим удалением таблицы T и переименованием вспомогательной таблицы. Ниже приводится код на языке <b>T-SQL</b>, реализующий данный алгоритм.</p>
+<pre><code>
+CREATE TABLE Ttemp(name VARCHAR(50) NOT NULL PRIMARY KEY);
+GO
+INSERT INTO Ttemp
+SELECT DISTINCT * FROM T;
+GO
+DROP TABLE T;
+GO
+EXEC sp_rename 'Ttemp', 'T';
+GO
+SELECT * FROM T;
+</code></pre>
+<p class="par">В результате получим то, что и требовалось: </p>
+<pre class="res">
+<b><u>name</u></b>
+John
+Smith
+Tom
+</pre>
+<p class="par">При этом ограничение первичного ключа будет препятствовать появлению дубликатов впоследствии.<br />
+<p class="par">А можно ли обойтись без создания новой таблицы? Можно. Например, с помощью такого алгоритма:<br />
+- добавить новый столбец типа счетчик (IDENTITY), который перенумерует все имеющиеся строки в таблице;<br />
+- из каждой группы строк с одинаковым значением в столбце <i>name</i> удалить все строки за исключением строки с максимальным номером (или минимальным - это все равно, т.к. мы имеем дело с дубликатами);<br />
+- удалить вспомогательный столбец;<br />
+- наложить ограничение.
+</p>
+<p class="par">Вот пример реализации такого подхода:</p>
+<pre><code>
+ALTER TABLE T
+ADD id INT IDENTITY(1,1);
+GO
+DELETE FROM T
+WHERE id &lt; (SELECT MAX(id)
+	     FROM T AS T1
+              WHERE T.name = T1.name
+              );
+GO
+ALTER TABLE T
+DROP COLUMN id;
+GO
+ALTER TABLE T
+ALTER COLUMN name VARCHAR(50) NOT NULL;
+GO
+ALTER TABLE T
+ADD CONSTRAINT T_PK PRIMARY KEY(name);
+GO
+</code></pre>
+<p class="par">А если без создания дополнительного столбца? Опять ответ утвердительный, но тут нам потребуются новые возможности языка, специфицированные в стандарте <b>ANSI SQL-99</b>. Идея состоит в том, чтобы создавать не постоянный столбец в таблице, который потом потребуется удалять, а виртуальный (вычисляемый). Этот столбец мы создадим с помощью <a class="let" href="http://www.sql-tutorial.ru/ru/book_ranking_functions.html">оконных функций</a>, присвоив ранг каждой строке внутри окна, определяемого равенством значений в столбце <i>name</i>. Наконец, мы удалим все строки с рангом выше 1.</p>
+<p class="par">Давайте подробно рассмотрим построение запроса на удаление дубликатов этим методом.</p>
+<h3>1.	Нумерация строк</h3>
+<p class="par">Мы не можем сразу ранжировать строки просто потому, что их не по чем ранжировать. Дело в том, что одинаковые строки будут иметь одинаковый ранг. Поэтому сначала пронумеруем их, упорядочив по столбцу <i>name</i>.</p>
+<pre><code>
+SELECT *, ROW_NUMBER() OVER(ORDER BY name) num
+FROM T
+</code></pre>
+<p class="par">В результате получим</p>
+<pre class="res">
+<b><u>name	num</u></b>
+John	1
+John	2
+Smith	3
+Smith	4
+Smith	5
+Tom	6
+</pre>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_2087"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 2087,
+            place: "advertur_2087",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<h3>2.  Ранжирование строк внутри групп дубликатов</h3>
+<p class="par">К сожалению, запрещено (<b>MS SQL Server</b>) использовать оконные функции внутри оконных функций. Т.е. мы не можем написать так:</p>
+<pre><code>
+SELECT name,
+RANK() OVER (PARTITION BY name ORDER BY ROW_NUMBER() OVER(ORDER BY name)) rnk
+FROM T;
+</code></pre>
+<p class="par">а потому используем подзапрос:</p>
+<pre><code>
+SELECT name, RANK() OVER (PARTITION BY name ORDER BY num) rnk
+FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY name) num
+	  FROM T
+	  ) X;
+</code></pre>
+<p class="par">Ниже представлен результат этого запроса.</p>
+<pre class="res">
+<b><u>name	rnk</u></b>
+John	1
+John	2
+Smith	1
+Smith	2
+Smith	3
+Tom	1
+</pre>
+<h3>3.	Удаление дубликатов из виртуальной таблицы</h3>
+<p class="par">Недопустимо удалять записи из запроса, т.е. мы не можем воспользоваться таким вариантом: </p>
+
+<pre><code>
+DELETE FROM (SELECT name, RANK() OVER (PARTITION BY name ORDER BY num) rnk
+			 FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY name) num
+	  		 	   FROM T
+				  ) X
+WHERE rnk > 1;
+</code></pre>
+<p class="par">т.к. в операторе <b>DELETE</b> допускается использовать только базовую таблицу или представление. Поэтому мы могли бы создать представление и удалить записи уже из него. Конечно, на самом деле записи удаляются из базовой таблицы, на которой создано представление. Итак, мы можем поступить следующим образом:</p>
+<pre><code>
+CREATE VIEW Tview
+AS
+SELECT name, RANK() OVER (PARTITION BY name ORDER BY num) rnk
+FROM(SELECT *, ROW_NUMBER() OVER(ORDER BY name) num
+	 FROM T
+	) X
+GO
+DELETE FROM Tview
+WHERE rnk > 1;
+</code></pre>
+<p class="par">"Опять что-то создавать", - скажете вы. Не обязательно, и, чтобы доказать это, нам помогут <b>общие табличные выражения</b> (<b>CTE</b>), которые можно назвать виртуальными представлениями. CTE, хотя и не являются сохраняемыми в базе данных объектами, могут использоваться с операторами обновления. В результате все сводится к одному запросу:</p>
+<pre><code>
+WITH CTE AS
+	(SELECT name, RANK() OVER (PARTITION BY name ORDER BY num) rnk
+	 FROM(SELECT *, ROW_NUMBER() OVER(ORDER BY name) num
+     	  FROM T
+		  ) X
+	)
+DELETE FROM CTE
+WHERE rnk > 1;
+GO
+</code></pre>
+<p class="par">Не забудьте только создать первичный ключ. :-)</p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<small>06-10-2009</small>
+<p class="par">Попал по внешней ссылке на эту статью и решил себе возразить. :-)</p>
+<p class="par">Вот эта фраза: "Мы не можем сразу ранжировать строки просто потому, что их не по чем ранжировать."</p>
+<p class="par">Разумеется, это правильно, но мы можем отказаться от ранжирования (в ущерб обучению :-)), выполнив  "псевдоранжирование". Дело в том, что есть возможность выполнить независимую нумерацию для каждой группы, если в  предложении OVER для функции ROW_NUMBER использовать конструкцию PARTITION BY. Итак, можно вообще обойтись без функции  RANK, если выполнить разбиение по name</p>
+<pre><code>
+SELECT name, ROW_NUMBER() OVER(PARTITION BY name ORDER BY name)
+FROM T;
+</code></pre>
+<p class="par">Это упростит все последующие запросы, в частности, последнее решение задачи удаления дубликатов можно переписать в виде:</p>
+<pre><code>
+WITH CTE AS (
+	SELECT name, ROW_NUMBER() OVER(PARTITION BY name ORDER BY name) rnk
+	FROM T
+	 )
+DELETE FROM CTE
+WHERE rnk > 1;
+</code></pre>
+
+<p class="par"><a class="let" href="http://www.dzone.com/links/how_to_delete_duplicate_rows_in_the_table.html">Dzone.com</a></p><br><br>
+<center>
+<small>
+
+</small>
+</center>
+<br><br><p></p>
+<!-- раскраска -->
+  	<script type="text/javascript">
+      hljs.initHighlightingOnLoad('sql');
+    </script>
+
+<center>
+<a href="select16.php.html">Назад</a> | <a href="select0.php.html">Содержание</a> | <a href="select18.php.html">Вперед</a><br><br>
+<!-- Яндекс.Директ -->
+<script type="text/javascript">
+yandex_partner_id = 184442;
+yandex_site_bg_color = 'FFFFFF';
+yandex_ad_format = 'direct';
+yandex_font_size = 0.9;
+yandex_direct_type = 'horizontal';
+yandex_direct_border_type = 'block';
+yandex_direct_limit = 2;
+yandex_direct_title_font_size = 2;
+yandex_direct_links_underline = false;
+yandex_direct_header_bg_color = 'FEEAC7';
+yandex_direct_border_color = 'FBE5C0';
+yandex_direct_title_color = '0000CC';
+yandex_direct_url_color = '006600';
+yandex_direct_text_color = '000000';
+yandex_direct_hover_color = '0066FF';
+yandex_direct_sitelinks_color = '0000CC';
+yandex_direct_favicon = true;
+yandex_no_sitelinks = false;
+document.write('<scr'+'ipt type="text/javascript" src="//an.yandex.ru/system/context.js"></scr'+'ipt>');
+</script><br></center>
+
+<br>
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" valign="middle">
+ <tr>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/" style="font-size: 8pt;">Начало</A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/exercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>SELECT (рейтинговые этапы)</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/dmlexercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>DML</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/developers.php.html" style="font-size: 8pt;">Разработчики</A></td>
+ <td align="left" width="20%">
+<!--begin of Top100 logo-->
+<noindex>
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-gray2.gif" alt="Rambler's Top100" width="88" height="31" border="0"></a>
+</noindex>
+<!--end of Top100 logo -->
+
+<!--LiveInternet counter--><script language="JavaScript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target="_blank"><img src="http://counter.yadro.ru/hit?t16.2;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+'" title="liveinternet.ru: число просмотров и посетителей за сутки и за сегодня" border="0" width="88" height="31"></a>')//--></script>
+<!--/LiveInternet-->
+
+<!--uptolike -->
+<script type="text/javascript">(function(w,doc) {
+if (!w.__utlWdgt ) {
+    w.__utlWdgt = true;
+    var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+    s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+    var h=d[g]('body')[0];
+    h.appendChild(s);
+}})(window,document);
+</script>
+<div data-background-alpha="0.0" data-orientation="horizontal" data-text-color="000000" data-share-shape="round-rectangle" data-buttons-color="ff9300" data-sn-ids="fb.tw.ok.vk.gp.mr." data-counter-background-color="ffffff" data-share-counter-size="10" data-share-size="20" data-background-color="ededed" data-share-counter-type="common" data-pid="1257631" data-counter-background-alpha="1.0" data-share-style="1" data-mode="share" data-following-enable="false" data-like-text-enable="false" data-selection-enable="true" data-icon-color="ffffff" class="uptolike-buttons" ></div>
+<!--uptolike -->
+
+ </td></tr>
+</table>
+</body></html>

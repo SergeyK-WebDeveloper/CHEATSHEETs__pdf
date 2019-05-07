@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 
+ 
+ <style>
+DIV {
+    width: 90%;
+    position: relative;
+    left: 5%;
+	
+    COLOR: black;
+    FONT-FAMILY: Verdana,Arial,Helvetica;
+    FONT-SIZE: 12px;
+    FONT-WEIGHT: normal;
+    TEXT-ALIGN: justify;
+    TEXT-DECORATION: none;
+}
+
+H2 {
+    COLOR: #004040;
+    FONT-FAMILY: Arial,Helvetica;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold;
+    LINE-HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    text-decoration: none;
+}
+h2 {
+    display: block;
+    
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+}
+
+.keyword {
+    color: #00f;
+}
+</style>
+
+
+	<meta charset="windows-1251">
+ <Title>Справка&nbsp;по&nbsp;SQL(DML): Функции Transact-SQL для обработки даты/времени</Title>
+        <link rel="stylesheet" type="text/css" href="../templates/style.css">
+		<link rel="stylesheet" type="text/css" href="../templates/help.css">
+
+    	<link rel="stylesheet" title="Default" href="../help/styles/default.css">
+        <script type="text/javascript" src="../help/highlight.js"></script>
+        <meta name="Description" content="Самоучитель SQL. Синтаксис операторов SELECT, INSERT, UPDATE, DELETE в примерах и задачах. Дистанционное обучение языку баз данных SQL. Интерактивные упражнения по оператору SELECT языка SQL. Тестирование по SQL. ">
+        <meta name="Keywords" content="SQL, руководство, справочник по SQL, справка по языку SQL, sql запросы, упражнения, тестирование, обучение, операторы sql, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, INSERT, UPDATE, DELETE, структурированный язык запросов">
+        <META NAME="abstract" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <META NAME="title" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <script LANGUAGE="JAVASCRIPT" src="/js/main.js"></script>
+ </head>
+ <body bgcolor="#F5F5F5">
+<!-- LM -->
+<script async="async" src="https://w.uptolike.com/widgets/v1/zp.js?pid=48720"></script>
+<!-- LM -->
+
+ <A name="ref_beg"></a>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_76084"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 76084,
+            place: "advertur_76084",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<form name="frmtpl">
+<table width="98%" border="0" cellpadding="5" align="center">
+    <tr>
+        <td width="33%" bgcolor="#CCCCCC" valign="middle"><b><a class='none' href="/help/">Синтаксис SQL</a></b></td>
+        <td width="33%" bgcolor="#CCCCCC" align="center" valign="middle">
+         Language&nbsp;<select name="lsttpl" OnChange="Sel_Lang(document.frmtpl.lsttpl.selectedIndex)"><option value="0" selected> Русский <option value="1" > English </select>
+        </td>
+        <td width="33%" bgcolor="#CCCCCC" align="right" valign="middle"><a href=select0.php.html>Оглавл.</a>&nbsp;<a href=select1.php.html>1</a>&nbsp;<a href=select2.php.html>2</a>&nbsp;<a href=select3.php.html>3</a>&nbsp;<a href=select4.php.html>4</a>&nbsp;<a href=select5.php.html>5</a>&nbsp;<a href=select6.php.html>6</a>&nbsp;<a href=select7.php.html>7</a>&nbsp;<a href=select8.php.html>8</a>&nbsp;[<b>9</b>]&nbsp;<a href=select10.php.html>10</a>&nbsp;<a href=select11.php.html>11</a>&nbsp;<a href=select12.php.html>12</a>&nbsp;<a href=select13.php.html>13</a>&nbsp;<a href=select14.php.html>14</a>&nbsp;<a href=select15.php.html>15</a>&nbsp;<a href=select16.php.html>16</a>&nbsp;<a href=select17.php.html>17</a>&nbsp;<a href=select18.php.html>18</a>&nbsp;<a href=select19.php.html>19</a>&nbsp;<a href=select20.php.html>20</a>&nbsp;
+<!--Rambler Top100-->
+<div style="display:none">
+<script id="top100Counter" type="text/javascript" src="http://cnt.rambler.ru/top100.jcn?718545">
+</script>
+<noscript><a href="http://top100.rambler.ru/top100/">
+<img src="http://cnt.rambler.ru/top100.cnt?718545" alt="Rambler's Top100" width="81" height="63" border="0" /></a></noscript>
+</div>
+<!--end of Top100-->
+        </td>
+</tr>
+</table>
+</form><a name=dtime></a>
+<h1>Функции Transact-SQL для обработки даты/времени</h1>
+<div style="width:90%;position:relative;left:5%;">
+<p>Стандарт SQL-92 специфицирует только функции, возвращающие системную дату/время.
+Например, функция CURRENT_TIMESTAMP возвращает сразу и дату, и время. Плюс имеются функции
+возвращающие что-либо одно.
+<br>Естественно, в силу такой ограниченности, реализации языка расширяют стандарт за счет добавления функций, облегчающий работу пользователей с данными этого типа.
+Здесь мы рассмотрим функции обработки даты/времени в T-SQL.
+<h2>Функция DATEADD</h2>
+Синтаксис<p>
+DATEADD ( <i>datepart</i> , <i>number</i>, <i>date</i> )
+<p>
+Эта функция возвращает значение типа <b>datetime</b>, которое получается добавлением к дате <i>date</i> количества интервалов типа <i>datepart</i>, равного <i>number</i>.
+Например, мы можем к заданной дате добавить любое число лет, дней, часов, минут и т.д.
+Допустимые значения аргумента <i>datepart</i> приведены ниже и взяты из BOL. <p>
+<TABLE border="0" cellpadding="5"  align="center">
+
+        <TR>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B> Datepart</B></TD>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B>Допустимые сокращения</B></TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Year - год</TD>
+                <TD BGCOLOR="#DDDDDD">yy, yyyy</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">Quarter - квартал</TD>
+                <TD BGCOLOR="#CCCCCC">qq, q</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Month - месяц</TD>
+                <TD BGCOLOR="#DDDDDD">mm, m</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">Dayofyear - день года</TD>
+                <TD BGCOLOR="#CCCCCC">dy, y</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Day - день</TD>
+                <TD BGCOLOR="#DDDDDD">dd, d</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">Week - неделя</TD>
+                <TD BGCOLOR="#CCCCCC">wk, ww</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Hour - час</TD>
+                <TD BGCOLOR="#DDDDDD">hh</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">Minute - минута</TD>
+                <TD BGCOLOR="#CCCCCC">mi, n</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Second - секунда</TD>
+                <TD BGCOLOR="#DDDDDD">ss, s</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">Millisecond - миллисекунда</TD>
+                <TD BGCOLOR="#CCCCCC">ms</TD>
+        </TR>
+
+</table>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_2087"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 2087,
+            place: "advertur_2087",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+
+<br>Пусть сегодня 23/01/2004, и мы хотим узнать, какой день будет через неделю. Мы можем написать
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEADD(day, 7, current_timestamp)</td></tr></table>
+а можем и так
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEADD(ww, 1, current_timestamp)</td></tr></table>
+В результате получим одно и то же; что-то типа 2004-01-30 19:40:58.923.
+<br>Однако мы не можем в этом случае написать
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEADD(mm, 1/4, current_timestamp)</td></tr></table>
+потому, что дробная часть значения аргумента <i>datepart</i> отбрасывается, и мы получим 0 вместо одной четвертой и, как следствие, текущий день.
+<br>Кроме того, мы можем использовать вместо <b>CURRENT_TIMESTAMP</b> функцию T-SQL <b>GETDATE()</b>
+с тем же самым эффектом. Наличие двух идентичных функций поддерживается, видимо, в ожидании последующего развития стандарта.
+<br><i><b>Пример</b></i> (схема 4). Определить, какой будет день через неделю после последнего полета.
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEADD(day, 7, (SELECT MAX(date) max_date FROM pass_in_trip))</td></tr></table>
+Использование подзапроса в качестве аргумента допустимо, т.к. этот подзапрос возвращает ЕДИНСТВЕННОЕ значение типа <b>datetime</b>.
+<h2>Функция DATEDIFF</h2>
+Синтаксис<p>
+DATEDIFF ( <i>datepart</i> , <i>startdate</i> , <i>enddate</i> )
+<p>
+Функция возвращает интервал времени, прошедшего между двумя временными отметками - <i>startdate</i>
+ (начальная отметка) и <i>enddate</i> (конечная отметка). Этот интервал может быть измерен в разных
+ единицах. Возможные варианты определяются аргументом <i>datepart</i> и перечислены выше применительно
+ к функции <b>DATEADD</b>.
+<br><i><b>Пример</b></i> (схема 4). Определить количество дней, прошедших между первым и последним совершенными рейсами.
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEDIFF(dd, (SELECT MIN(date) FROM pass_in_trip), (SELECT MAX(date) FROM pass_in_trip))</td></tr></table>
+<i><b>Пример</b></i> (схема 4). Определить продолжительность рейса 1123 в минутах.
+<br>Здесь следует принять во внимание, что время вылета (<i>time_out</i>) и время прилета (<i>time_in</i>) хранится в полях типа <b>datetime</b> таблицы Trip.
+Заметим, что SQL Server вплоть до версии 2000 не имеет отдельных темпоральных типов данных для даты и времени, появление которых ожидается в следующей версии (Yukon).
+Поэтому при вставке в поле <b>datetime</b> только времени (например, UPDATE trip SET time_out = '17:24:00' WHERE trip_no=1123), время будет дополнено значением даты по умолчанию
+('1900-01-01').
+<br>Напрашивающееся решение
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEDIFF(mi, time_out, time_in) dur FROM trip WHERE trip_no=1123,</td></tr></table>
+(которое дает  -760) будет неверным по двум причинам.
+<br>Во-первых, для рейсов, которые вылетают в один день, а прилетают на следующий, вычисленное таким способом значение будет неправильным.
+Во-вторых, ненадежно делать какие либо предположения относительно дня, который присутствует только в силу необходимости соответствовать типу <b>datetime</b>.
+<br>Но как определить, что самолет приземлился на следующий день? Тут помогает описание предметной области, где говорится, что полет не может продолжаться более суток. Итак, если время прилета не больше, чем время вылета, то этот факт имеет место.
+Теперь второй вопрос: как посчитать только время, с каким бы днем оно ни стояло?
+<br>Здесь может помочь функция T-SQL <b>DATEPART</b>.
+<h2>Функция DATEPART</h2>
+Синтаксис<p>
+DATEPART ( <i>datepart</i> , <i>date</i> )
+<p>
+Эта функция возвращает целое число, представляющее собой указанную аргументом  <i>datepart</i> часть заданной вторым аргументом даты (<i>date</i>).
+<br>Список допустимых значений аргумента <i>datepart</i>, описанный выше в данном разделе, дополняется еще одним значением
+<br><TABLE border="0" cellpadding="5"  align="center">
+        <TR>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B> Datepart</B></TD>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B>Допустимые сокращения</B></TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">Weekday - день недели</TD>
+                <TD BGCOLOR="#DDDDDD">dw</TD>
+        </TR>
+
+ </table>
+<br>Заметим, что возвращаемое функцией <b>DATEPART</b> значение в этом случае (номер дня недели) зависит
+ от настроек, которые можно изменить с помощью оператора <b>SET DATEFIRST</b>, устанавливающего первый день
+  недели. Для кого-то понедельник - день тяжелый, а для кого-то - воскресенье. Кстати, последнее значение принимается по умолчанию.
+<br>Однако вернемся к нашему примеру. В предположении, что время вылета/прилета является кратным минуте,
+мы можем его определить как сумму часов и минут. Поскольку функции даты/времени работают с целочисленными
+значениями, приведем результат к наименьшему интервалу - минутам. Итак, время вылета рейса 1123 в минутах
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEPART(hh, time_out)*60 + DATEPART(mi, time_out) FROM trip  WHERE trip_no=1123</td></tr></table>
+и время прилета
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATEPART(hh, time_in)*60 + DATEPART(mi, time_in) FROM trip  WHERE trip_no=1123</td></tr></table>
+<p>Теперь мы должны сравнить, превышает ли время прилета время вылета. Если это так, вычесть из первого второе, чтобы получить продолжительность рейса. В противном
+случае к разности нужно добавить одни сутки (24*60 = 1440 минут).</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT CASE WHEN time_dep>=time_arr THEN time_arr-time_dep+1440 ELSE time_arr-time_dep END dur FROM<br>
+(
+SELECT DATEPART(hh, time_out)*60 + DATEPART(mi, time_out) time_dep,
+DATEPART(hh, time_in)*60 + DATEPART(mi, time_in) time_arr
+FROM trip  WHERE trip_no=1123
+<br>) tm
+</td></tr> </table>
+Здесь, чтобы не повторять длинные конструкции в операторе CASE, использован подзапрос. Конечно, результат получился достаточно громоздким, зато абсолютно корректным в свете сделанных к этой задаче замечаний.
+<br><i><b>Пример</b></i> (4 схема). Определить дату и время вылета рейса 1123.
+<br>В таблице совершенных рейсов Pass_in_trip содержится только дата рейса, но не время,
+т.к. в соответствии с предметной областью каждый рейс может выполняться только один раз в день.
+Для решения этой задачи нужно к дате, хранящейся в таблице Pass_in_trip, добавить время из таблицы Trip
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT pt.trip_no, DATEADD(mi, DATEPART(hh,time_out)*60 + DATEPART(mi,time_out), date) [time]<br>
+FROM pass_in_trip pt JOIN trip t ON pt.trip_no=t.trip_no  WHERE t.trip_no=1123</td></tr></table>
+Выполнив запрос, получим следующий результат<p>
+ <TABLE border="0" cellpadding="5"  align="center">
+        <TR>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B> Trip_no</B></TD>
+                <TD ALIGN="center" BGCOLOR="#D3DCE3"><B>Time</B></TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#DDDDDD">1123</TD>
+                <TD BGCOLOR="#DDDDDD">2003-04-05 16:20:00.000</TD>
+        </TR>
+        <TR>
+                <TD BGCOLOR="#CCCCCC">1123</TD>
+                <TD BGCOLOR="#CCCCCC">2003-04-08 16:20:00.000</TD>
+        </TR>
+</table>
+
+ <br><b>DISTINCT</b> необходим здесь, чтобы исключить возможные дубликаты, поскольку номер и дата рейса
+ дублируются в этой таблице для каждого пассажира данного рейса.
+<h2>Функция DATENAME</h2>
+Синтаксис<p>
+DATENAME ( <i>datepart</i> , <i>date</i> )
+<p>
+Эта функция возвращает символьное представление составляющей (<i>datepart</i> ) указанной даты (<i>date</i>).
+Аргумент, определяющий составляющую даты, может принимать одно из значений, перечисленных в вышеприведенной таблице.
+<br>Это дает нам простую возможность конкатенировать компоненты даты, получая любой нужный формат представления. Например, конструкция
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATENAME ( weekday , '2003-12-31' )+',&nbsp;'+DATENAME ( day , '2003-12-31' )+'&nbsp;'+
+DATENAME ( month , '2003-12-31' )+'&nbsp;'+DATENAME ( year , '2003-12-31' )</td></tr></table>
+даст нам следующий результат
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">Wednesday, 31 December 2003</td></tr></table>
+Следует отметить, что данная функция выявляет отличие значений <i>day</i> и <i>dayofyear</i> аргумента
+<i>datepart</i>. Первый дает символьное представление дня указанной даты, в то время как второй дает
+символьное представление этого дня от начала года. Т.е.
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATENAME ( day , '2003-12-31' )</td></tr></table>
+даст нам 31, а
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT DATENAME ( dayofyear  , '2003-12-31' )</td></tr></table>
+- 365.
+<br>В ряде случаев функцию <b>DATEPART</b> можно заменить более простыми функциями. Вот они: <br>
+<b>DAY</b> ( <i>date</i> )&nbsp;                 - &nbsp;целочисленное представление дня указанной даты.
+Эта функция эквивалентна функции <b>DATEPART</b>(<i>dd</i>, <i>date</i>). <br>
+<b>MONTH</b> ( <i>date</i> ) &nbsp;        - &nbsp;целочисленное представление месяца указанной даты.
+Эта функция эквивалентна функции <b>DATEPART</b>(<i>mm</i>, <i>date</i>). <br>
+<b>YEAR</b> ( <i>date</i> )   &nbsp;        -&nbsp; целочисленное представление года указанной даты.
+Эта функция эквивалентна функции <b>DATEPART</b>(<i>yy</i>, <i>date</i>).
+
+<h2>Функция @@DATEFIRST  </h2>
+
+<p>@@DATEFIRST возвращает число, которое определяет первый день недели, установленный для текущей сессии. При этом 1 соответствует понедельнику, а 7, соответственно, воскресенью. Т.е. если </p>
+
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">SELECT @@DATEFIRST;</td></tr></table>
+
+возвращает 7, то первым днем недели считается воскресенье (соответствует текущим настройкам на сайте).
+
+
+<p>Рекомендуемые упражнения:
+<A name=stay_here2></A><a target="exercises" href="/learn_exercises.php.html?LN=78&amp;Lang=0">78</a>, <a target="exercises" href="/learn_exercises.php.html?LN= 110&amp;Lang=0"> 110</a>.</p>
+</div><center>
+<small>
+
+
+</small>
+</center>
+<p></p>
+<!-- раскраска -->
+  	<script type="text/javascript">
+      hljs.initHighlightingOnLoad('sql');
+    </script>
+
+<center>
+<a href="select8.php.html">Назад</a> | <a href="select0.php.html">Содержание</a> | <a href="select10.php.html">Вперед</a><br><br>
+<!-- Яндекс.Директ -->
+<script type="text/javascript">
+yandex_partner_id = 184442;
+yandex_site_bg_color = 'FFFFFF';
+yandex_ad_format = 'direct';
+yandex_font_size = 0.9;
+yandex_direct_type = 'horizontal';
+yandex_direct_border_type = 'block';
+yandex_direct_limit = 2;
+yandex_direct_title_font_size = 2;
+yandex_direct_links_underline = false;
+yandex_direct_header_bg_color = 'FEEAC7';
+yandex_direct_border_color = 'FBE5C0';
+yandex_direct_title_color = '0000CC';
+yandex_direct_url_color = '006600';
+yandex_direct_text_color = '000000';
+yandex_direct_hover_color = '0066FF';
+yandex_direct_sitelinks_color = '0000CC';
+yandex_direct_favicon = true;
+yandex_no_sitelinks = false;
+document.write('<scr'+'ipt type="text/javascript" src="//an.yandex.ru/system/context.js"></scr'+'ipt>');
+</script><br><style>
+span.c4b5cf {
+padding: 5px !important;
+text-align: left !important;
+font-size: 10px !important;
+background-color: transparent !important;
+border: 1px solid #e0e0e0 !important;
+}
+.c4b5cf a {
+color: #6A0000 !important;
+font-weight: normal;
+font-size: 10px !important;
+}
+.c4b5cf .text {
+color: #000000 !important;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.c4b5cf .host {
+color: #006600;
+font-weight: normal;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+</style>
+<span class="c4b5cf">
+
+  <span>
+    <span><a href="https://dom-okon.com.ua/">Пластиковые окна киев</a></span><br />
+<span class="text">Производство пластиковых окон в Киеве по доступной цене. Звоните</span><br />
+<span class="host">dom-okon.com.ua</span>
+
+  </span><br />
+
+  <span>
+    <span><a href="https://thstore.ru/catalog/bags-and-suitcases/">Купить рюкзак Thule</a></span><br />
+<span class="text">Купите рюкзаки в Москве! Низкие цены! Доставка бесплатно</span><br />
+<span class="host">thstore.ru</span>
+
+  </span><br />
+
+</span>
+</center>
+
+<br>
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" valign="middle">
+ <tr>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/" style="font-size: 8pt;">Начало</A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/exercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>SELECT (рейтинговые этапы)</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/dmlexercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>DML</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/developers.php.html" style="font-size: 8pt;">Разработчики</A></td>
+ <td align="left" width="20%">
+<!--begin of Top100 logo-->
+<noindex>
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-gray2.gif" alt="Rambler's Top100" width="88" height="31" border="0"></a>
+</noindex>
+<!--end of Top100 logo -->
+
+<!--LiveInternet counter--><script language="JavaScript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target="_blank"><img src="http://counter.yadro.ru/hit?t16.2;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+'" title="liveinternet.ru: число просмотров и посетителей за сутки и за сегодня" border="0" width="88" height="31"></a>')//--></script>
+<!--/LiveInternet-->
+
+<!--uptolike -->
+<script type="text/javascript">(function(w,doc) {
+if (!w.__utlWdgt ) {
+    w.__utlWdgt = true;
+    var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+    s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+    var h=d[g]('body')[0];
+    h.appendChild(s);
+}})(window,document);
+</script>
+<div data-background-alpha="0.0" data-orientation="horizontal" data-text-color="000000" data-share-shape="round-rectangle" data-buttons-color="ff9300" data-sn-ids="fb.tw.ok.vk.gp.mr." data-counter-background-color="ffffff" data-share-counter-size="10" data-share-size="20" data-background-color="ededed" data-share-counter-type="common" data-pid="1257631" data-counter-background-alpha="1.0" data-share-style="1" data-mode="share" data-following-enable="false" data-like-text-enable="false" data-selection-enable="true" data-icon-color="ffffff" class="uptolike-buttons" ></div>
+<!--uptolike -->
+
+ </td></tr>
+</table>
+</body></html>

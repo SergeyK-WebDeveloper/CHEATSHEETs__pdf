@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 
+ <style>
+DIV {
+    width: 90%;
+    position: relative;
+    left: 5%;
+	
+    COLOR: black;
+    FONT-FAMILY: Verdana,Arial,Helvetica;
+    FONT-SIZE: 12px;
+    FONT-WEIGHT: normal;
+    TEXT-ALIGN: justify;
+    TEXT-DECORATION: none;
+}
+
+H2 {
+    COLOR: #004040;
+    FONT-FAMILY: Arial,Helvetica;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold;
+    LINE-HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    text-decoration: none;
+}
+h2 {
+    display: block;
+    
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+}
+
+.keyword {
+    color: #00f;
+}
+</style>
+
+
+	<meta charset="windows-1251">
+ <Title>Справка&nbsp;по&nbsp;SQL(DML): Как добавить новый столбец в таблицу между существующими столбцами?</Title>
+        <link rel="stylesheet" type="text/css" href="../templates/style.css">
+		<link rel="stylesheet" type="text/css" href="../templates/help.css">
+
+    	<link rel="stylesheet" title="Default" href="../help/styles/default.css">
+        <script type="text/javascript" src="../help/highlight.js"></script>
+        <meta name="Description" content="Самоучитель SQL. Синтаксис операторов SELECT, INSERT, UPDATE, DELETE в примерах и задачах. Дистанционное обучение языку баз данных SQL. Интерактивные упражнения по оператору SELECT языка SQL. Тестирование по SQL. ">
+        <meta name="Keywords" content="SQL, руководство, справочник по SQL, справка по языку SQL, sql запросы, упражнения, тестирование, обучение, операторы sql, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, INSERT, UPDATE, DELETE, структурированный язык запросов">
+        <META NAME="abstract" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <META NAME="title" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <script LANGUAGE="JAVASCRIPT" src="/js/main.js"></script>
+ </head>
+ <body bgcolor="#F5F5F5">
+<!-- LM -->
+<script async="async" src="https://w.uptolike.com/widgets/v1/zp.js?pid=48720"></script>
+<!-- LM -->
+
+ <A name="ref_beg"></a>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_76084"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 76084,
+            place: "advertur_76084",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<form name="frmtpl">
+<table width="98%" border="0" cellpadding="5" align="center">
+    <tr>
+        <td width="33%" bgcolor="#CCCCCC" valign="middle"><b><a class='none' href="/help/">Синтаксис SQL</a></b></td>
+        <td width="33%" bgcolor="#CCCCCC" align="center" valign="middle">
+         Language&nbsp;<select name="lsttpl" OnChange="Sel_Lang(document.frmtpl.lsttpl.selectedIndex)"><option value="0" selected> Русский <option value="1" > English </select>
+        </td>
+        <td width="33%" bgcolor="#CCCCCC" align="right" valign="middle"><a href=select0.php.html>Оглавл.</a>&nbsp;<a href=select1.php.html>1</a>&nbsp;<a href=select2.php.html>2</a>&nbsp;<a href=select3.php.html>3</a>&nbsp;<a href=select4.php.html>4</a>&nbsp;<a href=select5.php.html>5</a>&nbsp;<a href=select6.php.html>6</a>&nbsp;<a href=select7.php.html>7</a>&nbsp;<a href=select8.php.html>8</a>&nbsp;<a href=select9.php.html>9</a>&nbsp;<a href=select10.php.html>10</a>&nbsp;<a href=select11.php.html>11</a>&nbsp;<a href=select12.php.html>12</a>&nbsp;<a href=select13.php.html>13</a>&nbsp;<a href=select14.php.html>14</a>&nbsp;[<b>15</b>]&nbsp;<a href=select16.php.html>16</a>&nbsp;<a href=select17.php.html>17</a>&nbsp;<a href=select18.php.html>18</a>&nbsp;<a href=select19.php.html>19</a>&nbsp;<a href=select20.php.html>20</a>&nbsp;
+<!--Rambler Top100-->
+<div style="display:none">
+<script id="top100Counter" type="text/javascript" src="http://cnt.rambler.ru/top100.jcn?718545">
+</script>
+<noscript><a href="http://top100.rambler.ru/top100/">
+<img src="http://cnt.rambler.ru/top100.cnt?718545" alt="Rambler's Top100" width="81" height="63" border="0" /></a></noscript>
+</div>
+<!--end of Top100-->
+        </td>
+</tr>
+</table>
+</form><h1>Как добавить новый столбец в таблицу между существующими столбцами?</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="let" href="http://www.sql-ex.ru/developers.php.html#mois">Моисеенко С.И.</a> (07-02-2009)</small>
+<p class="par">Уже не впервые на форумах встречаю вопрос о том, как добавить новый столбец в определенное место существующей таблицы, скажем, между первым и вторым столбцом.
+Этот наивный с точки зрения реляционной модели вопрос, тем не менее, имеет некоторый смысл с точки зрения языка SQL.</p>
+<p class="par">Я говорю "наивный", поскольку по определению атрибуты отношения не упорядочены, и обращение к значениям атрибута выполняется по его имени, но не по позиции. Что же касается языка SQL, то столбцы в таблице имеют порядок, который задается в операторе <b>CREATE TABLE</b>. Новый же столбец, который добавляется с помощью оператора <b>ALTER TABLE</b>, становится последним в таблице. Т.е. стандарт языка SQL не предусматривает возможности непосредственно добавить столбец в определенную позицию в списке столбцов.</p>
+<p class="par">Справедливости ради следует сказать, что некоторые реализации языка SQL расширяют стандарт в этом плане. Например, в <b>MySQL</b> в операторе <b>ALTER TABLE</b> вы можете указать позицию добавляемого столбца (новый столбец может стать первым или после указанного столбца). </p>
+<p class="par">Другой вопрос, а зачем это нужно? Мне приходит в голову такой вариант. Скажем, в клиентском приложении для генерации отчетов используется запрос типа</p>
+<pre><code>
+SELECT * FROM Employees
+ORDER BY last_name, first_name;
+</code></pre>
+
+<p class="par">Если потребовалось добавить в таблицу Employees дополнительную информацию о сотрудниках, которая логически должна находиться в определенном месте (например, отчество непосредственно между именем и фамилией), то вместо того, чтобы вносить изменения в клиентские приложения, может оказаться проще изменить структуру таблицы Employees. </p>
+<p class="par">Итак, имеется таблица Employees, которая создается следующим оператором:</p>
+<pre><code>
+CREATE TABLE Employees(
+emp_num INT NOT NULL PRIMARY KEY,
+first_name CHAR(30) NOT NULL,
+last_name CHAR(30) NOT NULL
+);
+</code></pre>
+<p class="par">Теперь нам требуется добавить столбец middle_name (отчество) между столбцами first_name и last_name.</p>
+<p class="par">В <b>MySQL</b> это можно сделать просто:</p>
+<pre><code>
+ALTER TABLE Employees ADD COLUMN middle_name CHAR(10) NULL AFTER first_name;
+</code></pre>
+<p class="par">В <b>SQL Server</b> так поступить нельзя, но можно использовать следующий алгоритм:</p>
+<p class="par">
+&raquo; создание новой таблицы требуемой структуры;<br>
+&raquo; копирование данных из таблицы Employees в эту новую таблицу;<br>
+&raquo; удаление таблицы Employees;<br>
+&raquo; переименование новой таблицы в таблицу с именем Employees.
+</p>
+<p class="par">Ниже приводятся операторы <b>T-SQL</b>, которые реализуют этот алгоритм.</p>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_2087"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 2087,
+            place: "advertur_2087",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<pre><code>
+-- Создаем временную таблицу требуемой структуры
+CREATE TABLE Emp_temp(
+emp_num INT NOT NULL PRIMARY KEY,
+first_name CHAR(30) NOT NULL,
+middle_name CHAR(30) NULL,
+last_name CHAR(30) NOT NULL
+);
+GO
+-- Копируем данные из старой таблицы в новую
+INSERT INTO Emp_temp(emp_num, first_name, last_name)
+SELECT * FROM Employees;
+GO
+-- Удаляем старую таблицу
+DROP TABLE Employees;
+GO
+-- Переименовываем новую
+EXEC sp_rename 'Emp_temp', 'Employees';
+GO
+</code></pre>
+<p class="par">Обратите внимание, что столбец middle_name допускает NULL-значения. Мы не можем добавить столбец в существующую таблицу (или, как в нашем случае, не задавая значения для этого столбца при копировании данных из таблицы Employees в таблицу Emp_temp), если он не имеет значения по умолчанию. Здесь мы принимаем по умолчанию значение NULL. </p>
+<p class="par">Мы можем выполнить два первых шага за одно действие с помощью оператора <b>SELECT INTO</b>, который "на лету" создает новую таблицу:</p>
+<pre><code>
+SELECT emp_num, first_name, CAST(NULL AS CHAR(30)), last_name
+INTO Emp_temp
+FROM Employees;
+</code></pre>
+<p class="par">Оператор <b>CAST</b> позволяет нам тут же задать требуемый тип добавляемого столбца. Остальные столбцы наследуют типы из таблицы-источника.</p>
+<p class="par">Если вы хотите проверить работу последнего скрипта, приведите таблицу в исходное состояние, удалив добавленный ранее столбец:</p>
+<pre><code>
+ALTER TABLE Employees DROP COLUMN middle_name;
+</code></pre>
+<p class="par">Заметим, что при использовании оператора <b>SELECT INTO</b> теряются ключи. Поэтому нам придется добавить ограничение <b>PRIMARY KEY</b> (первичный ключ) либо во временную таблицу, либо уже в переименованную, чтобы получить в точности требуемую структуру:</p>
+<pre><code>
+ALTER TABLE Emp_temp
+ADD CONSTRAINT emp_PK PRIMARY KEY(emp_num);
+</code></pre>
+<p class="par">Аналогичный алгоритм можно применить и для перестановки уже существующих столбцов. Помимо указанной причины такая перестановка может повысить производительность, связанную с сокращением объема данных, записываемых в журнал транзакций в некоторых реализациях. Это связано со спецификой обработки строк фиксированной и переменной длины. Вот какие рекомендации по этому поводу дает Джо Селко<sup>*</sup>:</p>
+<p class="par">
+&raquo; помещайте первыми нечасто обновляемые столбцы постоянной длины;<br>
+&raquo; затем помещайте нечасто обновляемые столбцы переменной длины;<br>
+&raquo; последними помещайте часто обновляемые столбцы;<br>
+&raquo; ставьте рядом столбцы, которые, как правило, обновляются одновременно.
+</p>
+<p class="par"><sup>*</sup>Селко Д. Стиль программирования Джо Селко на SQL. - М.: Изд-во "Русская редакция"; СПб.: Питер, 2006</p>
+
+<p class="par"><a class="let" href="http://www.dzone.com/links/how_to_add_a_new_column_into_the_table_between_th.html">Dzone.com</a></p><br><br>
+<small>
+
+</small>
+<br><br>
+<p></p>
+<!-- раскраска -->
+  	<script type="text/javascript">
+      hljs.initHighlightingOnLoad('sql');
+    </script>
+
+<center>
+<a href="select14.php.html">Назад</a> | <a href="select0.php.html">Содержание</a> | <a href="select16.php.html">Вперед</a><br><br>
+<!-- Яндекс.Директ -->
+<script type="text/javascript">
+yandex_partner_id = 184442;
+yandex_site_bg_color = 'FFFFFF';
+yandex_ad_format = 'direct';
+yandex_font_size = 0.9;
+yandex_direct_type = 'horizontal';
+yandex_direct_border_type = 'block';
+yandex_direct_limit = 2;
+yandex_direct_title_font_size = 2;
+yandex_direct_links_underline = false;
+yandex_direct_header_bg_color = 'FEEAC7';
+yandex_direct_border_color = 'FBE5C0';
+yandex_direct_title_color = '0000CC';
+yandex_direct_url_color = '006600';
+yandex_direct_text_color = '000000';
+yandex_direct_hover_color = '0066FF';
+yandex_direct_sitelinks_color = '0000CC';
+yandex_direct_favicon = true;
+yandex_no_sitelinks = false;
+document.write('<scr'+'ipt type="text/javascript" src="//an.yandex.ru/system/context.js"></scr'+'ipt>');
+</script><br><style>
+span.c4b5cf {
+padding: 5px !important;
+text-align: left !important;
+font-size: 10px !important;
+background-color: transparent !important;
+border: 1px solid #e0e0e0 !important;
+}
+.c4b5cf a {
+color: #6A0000 !important;
+font-weight: normal;
+font-size: 10px !important;
+}
+.c4b5cf .text {
+color: #000000 !important;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.c4b5cf .host {
+color: #006600;
+font-weight: normal;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+</style>
+<span class="c4b5cf">
+
+  <span>
+    
+<span class="text">строительство домов из бруса  <a href="http://kirov-rosterem.ru/" target="_blank">вебсайт</a></span><br />
+<span class="host">kirov-rosterem.ru</span>
+
+  </span><br />
+
+  <span>
+    
+<span class="text">мягкая мебель  <a href="http://astmebel.ru/katalog/divany/" target="_blank">здесь</a></span><br />
+<span class="host">astmebel.ru</span>
+
+  </span><br />
+
+</span>
+</center>
+
+<br>
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" valign="middle">
+ <tr>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/" style="font-size: 8pt;">Начало</A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/exercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>SELECT (рейтинговые этапы)</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/dmlexercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>DML</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/developers.php.html" style="font-size: 8pt;">Разработчики</A></td>
+ <td align="left" width="20%">
+<!--begin of Top100 logo-->
+<noindex>
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-gray2.gif" alt="Rambler's Top100" width="88" height="31" border="0"></a>
+</noindex>
+<!--end of Top100 logo -->
+
+<!--LiveInternet counter--><script language="JavaScript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target="_blank"><img src="http://counter.yadro.ru/hit?t16.2;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+'" title="liveinternet.ru: число просмотров и посетителей за сутки и за сегодня" border="0" width="88" height="31"></a>')//--></script>
+<!--/LiveInternet-->
+
+<!--uptolike -->
+<script type="text/javascript">(function(w,doc) {
+if (!w.__utlWdgt ) {
+    w.__utlWdgt = true;
+    var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+    s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+    var h=d[g]('body')[0];
+    h.appendChild(s);
+}})(window,document);
+</script>
+<div data-background-alpha="0.0" data-orientation="horizontal" data-text-color="000000" data-share-shape="round-rectangle" data-buttons-color="ff9300" data-sn-ids="fb.tw.ok.vk.gp.mr." data-counter-background-color="ffffff" data-share-counter-size="10" data-share-size="20" data-background-color="ededed" data-share-counter-type="common" data-pid="1257631" data-counter-background-alpha="1.0" data-share-style="1" data-mode="share" data-following-enable="false" data-like-text-enable="false" data-selection-enable="true" data-icon-color="ffffff" class="uptolike-buttons" ></div>
+<!--uptolike -->
+
+ </td></tr>
+</table>
+</body></html>

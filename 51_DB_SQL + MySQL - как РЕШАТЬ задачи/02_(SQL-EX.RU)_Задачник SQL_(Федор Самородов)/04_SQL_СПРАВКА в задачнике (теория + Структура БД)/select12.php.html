@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 
+ <style>
+DIV {
+    width: 90%;
+    position: relative;
+    left: 5%;
+	
+    COLOR: black;
+    FONT-FAMILY: Verdana,Arial,Helvetica;
+    FONT-SIZE: 12px;
+    FONT-WEIGHT: normal;
+    TEXT-ALIGN: justify;
+    TEXT-DECORATION: none;
+}
+
+H2 {
+    COLOR: #004040;
+    FONT-FAMILY: Arial,Helvetica;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold;
+    LINE-HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    text-decoration: none;
+}
+h2 {
+    display: block;
+    
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+}
+
+.keyword {
+    color: #00f;
+}
+</style>
+
+
+	<meta charset="windows-1251">
+ <Title>Справка&nbsp;по&nbsp;SQL(DML): Операторы UPDATE и DELETE</Title>
+        <link rel="stylesheet" type="text/css" href="../templates/style.css">
+		<link rel="stylesheet" type="text/css" href="../templates/help.css">
+
+    	<link rel="stylesheet" title="Default" href="../help/styles/default.css">
+        <script type="text/javascript" src="../help/highlight.js"></script>
+        <meta name="Description" content="Самоучитель SQL. Синтаксис операторов SELECT, INSERT, UPDATE, DELETE в примерах и задачах. Дистанционное обучение языку баз данных SQL. Интерактивные упражнения по оператору SELECT языка SQL. Тестирование по SQL. ">
+        <meta name="Keywords" content="SQL, руководство, справочник по SQL, справка по языку SQL, sql запросы, упражнения, тестирование, обучение, операторы sql, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, INSERT, UPDATE, DELETE, структурированный язык запросов">
+        <META NAME="abstract" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <META NAME="title" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <script LANGUAGE="JAVASCRIPT" src="/js/main.js"></script>
+ </head>
+ <body bgcolor="#F5F5F5">
+<!-- LM -->
+<script async="async" src="https://w.uptolike.com/widgets/v1/zp.js?pid=48720"></script>
+<!-- LM -->
+
+ <A name="ref_beg"></a>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_76084"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 76084,
+            place: "advertur_76084",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<form name="frmtpl">
+<table width="98%" border="0" cellpadding="5" align="center">
+    <tr>
+        <td width="33%" bgcolor="#CCCCCC" valign="middle"><b><a class='none' href="/help/">Синтаксис SQL</a></b></td>
+        <td width="33%" bgcolor="#CCCCCC" align="center" valign="middle">
+         Language&nbsp;<select name="lsttpl" OnChange="Sel_Lang(document.frmtpl.lsttpl.selectedIndex)"><option value="0" selected> Русский <option value="1" > English </select>
+        </td>
+        <td width="33%" bgcolor="#CCCCCC" align="right" valign="middle"><a href=select0.php.html>Оглавл.</a>&nbsp;<a href=select1.php.html>1</a>&nbsp;<a href=select2.php.html>2</a>&nbsp;<a href=select3.php.html>3</a>&nbsp;<a href=select4.php.html>4</a>&nbsp;<a href=select5.php.html>5</a>&nbsp;<a href=select6.php.html>6</a>&nbsp;<a href=select7.php.html>7</a>&nbsp;<a href=select8.php.html>8</a>&nbsp;<a href=select9.php.html>9</a>&nbsp;<a href=select10.php.html>10</a>&nbsp;<a href=select11.php.html>11</a>&nbsp;[<b>12</b>]&nbsp;<a href=select13.php.html>13</a>&nbsp;<a href=select14.php.html>14</a>&nbsp;<a href=select15.php.html>15</a>&nbsp;<a href=select16.php.html>16</a>&nbsp;<a href=select17.php.html>17</a>&nbsp;<a href=select18.php.html>18</a>&nbsp;<a href=select19.php.html>19</a>&nbsp;<a href=select20.php.html>20</a>&nbsp;
+<!--Rambler Top100-->
+<div style="display:none">
+<script id="top100Counter" type="text/javascript" src="http://cnt.rambler.ru/top100.jcn?718545">
+</script>
+<noscript><a href="http://top100.rambler.ru/top100/">
+<img src="http://cnt.rambler.ru/top100.cnt?718545" alt="Rambler's Top100" width="81" height="63" border="0" /></a></noscript>
+</div>
+<!--end of Top100-->
+        </td>
+</tr>
+</table>
+</form><a name=update></a>
+<h1>Оператор UPDATE</h1>
+<div style="width:90%;position:relative;left:5%;">
+<p>
+Оператор <b>UPDATE</b> изменяет имеющиеся данные в таблице. Команда имеет следующий синтаксис
+<p>
+UPDATE &lt;имя таблицы>
+<br>&nbsp;&nbsp;&nbsp;SET {имя столбца = {выражение для вычисления значения столбца
+<br>&nbsp;&nbsp;&nbsp;		| NULL
+<br>&nbsp;&nbsp;&nbsp;		| DEFAULT},...}
+<br>&nbsp;&nbsp;&nbsp;		[ {WHERE &lt;предикат>}];
+</p>
+<p>С помощью одного оператора могут быть заданы значения для любого количества столбцов.
+Однако в одном и том же операторе <b>UPDATE</b> можно вносить изменения в каждый столбец указанной таблицы только один раз. При отсутствии предложения <b>WHERE</b> будут обновлены все строки таблицы.</p>
+<p>Если столбец допускает NULL-значение, то его можно указать в явном виде. Кроме того, можно заменить имеющееся значение на значение по умолчанию (<b>DEFAULT</b>) для данного столбца.</p>
+<p>Ссылка на &quot;выражение&quot; может относиться к текущим значениям в изменяемой таблице. Например, мы можем уменьшить все цены ПК-блокнотов на 10 процентов с помощью следующего оператора:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Laptop SET price=price*0.9
+</td></tr></table>
+<p>Разрешается также значения одних столбцов присваивать другим столбцам. Пусть, например, требуется заменить жесткие диски менее 10 Гб в ПК-блокнотах. При этом емкость новых дисков должна составлять половину объема RAM, имеющейся в данных устройствах. Эту задачу можно решить следующим образом:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Laptop SET hd=ram/2 WHERE hd &lt; 10;
+</td></tr></table>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_2087"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 2087,
+            place: "advertur_2087",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<p>Естественно, типы данных столбцов <i>hd</i> и <i>ram</i> должны быть совместимы.
+Для приведения типов может использоваться выражение <b><a href="select8.php.html#cast">CAST</a></b>. </p>
+<p>Если требуется изменять данные в зависимости от содержимого некоторого столбца, можно воспользоваться
+ выражением <b><a href="select8.php.html#case">CASE</a></b>. Если, скажем, нужно поставить жесткие диски объемом 20 Гб на ПК-блокноты с памятью
+ менее 128 Мб и 40 гигабайтные - на остальные ПК-блокноты, то можно написать такой запрос:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Laptop
+<br>&nbsp;&nbsp;&nbsp;SET hd = CASE WHEN ram&lt;128 THEN 20 ELSE 40 END
+</td></tr></table>
+<p>Для вычисления значений столбцов допускается также использование подзапросов. Например, требуется укомплектовать все ПК-блокноты самыми быстрыми процессорами из имеющихся. Тогда можно написать:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Laptop
+<br>&nbsp;&nbsp;&nbsp;SET speed = (SELECT MAX(speed) FROM Laptop)
+</td></tr></table>
+<p>Необходимо сказать несколько слов об автоинкрементируемых столбцах. Если столбец <i>code</i> в таблице <i>Laptop</i> определен как <b>IDENTITY(1,1)</b>, то следующий оператор </p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Laptop SET code=5 WHERE code=4
+</td></tr></table>
+<p>не будет выполнен, т.к. автоикрементируемое поле не допускает обновления, и мы получим соответствующее сообщение об ошибке. Чтобы выполнить все же эту задачу, можно поступить следующим образом. Сначала вставить нужную строку, используя <b>SET IDENTITY_INSERT</b>, после чего удалить старую строку:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+SET IDENTITY_INSERT Laptop  ON
+<br>INSERT INTO Laptop_ID(code, model, speed, ram, hd, price, screen)
+<br>&nbsp;&nbsp;&nbsp;SELECT 5, model, speed, ram, hd, price, screen
+<br>&nbsp;&nbsp;&nbsp;FROM Laptop_ID WHERE code=4
+<br>DELETE FROM Laptop_ID WHERE code=4
+</td></tr></table>
+<p>Разумеется, другой строки со значением <i>code</i>=5 в таблице быть не должно.</p>
+<p>В Transact-SQL оператор <b>UPDATE</b> расширяет стандарт за счет использования необязательного предложения <b>FROM</b>. В этом предложении специфицируется таблица, обеспечивающая критерий для операции обновления. Дополнительную гибкость здесь дает использование операций соединения таблиц.</p>
+<p><b><i>Пример</i></b>. Пусть требуется указать "No PC" (нет ПК) в столбце <i>type</i> для тех моделей ПК из таблицы <i>Product</i>, для которых нет соответствующих строк в таблице <i>PC</i>. Решение посредством соединения таблиц можно записать так:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+UPDATE Product
+<br>&nbsp;&nbsp;&nbsp;SET type='No PC'
+<br>&nbsp;&nbsp;&nbsp;FROM Product pr LEFT JOIN PC ON pr.model=pc.model
+<br>&nbsp;&nbsp;&nbsp;WHERE type='pc' AND pc.model IS NULL
+</td></tr></table>
+<p>Здесь используется внешнее соединение, в результате чего столбец <i>pc.model</i> для моделей ПК, отсутствующих в таблице <i>PC</i>, будет содержать NULL-значение, что и используется для идентификации подлежащих обновлению строк. Естественно, эта задача имеет решение и в &quot;стандартном&quot; исполнении:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">UPDATE Product
+<br>&nbsp;&nbsp;&nbsp;SET type='No PC'
+<br>&nbsp;&nbsp;&nbsp;WHERE type='pc' and model NOT IN (SELECT model FROM PC)
+</td></tr></table>
+<a name=delete></a>
+<h1>Оператор DELETE</h1>
+<p>Оператор <b>DELETE</b> удаляет строки из временных или постоянных базовых таблиц, представлений или курсоров, причем в двух последних случаях действие оператора распространяется на те базовые таблицы, из которых извлекались данные в эти представления или курсоры. Оператор удаления имеет простой синтаксис:</p>
+<p>
+DELETE FROM &lt;имя таблицы > [WHERE &lt;предикат>];
+</p>
+<p>Если предложение <b>WHERE</b> отсутствует, удаляются все строки из таблицы или представления (представление должно быть обновляемым). Более быстро эту операцию (удаление всех строк из таблицы) в Transact-SQL можно также выполнить с помощью команды</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+TRUNCATE TABLE &lt;имя таблицы>
+</td></tr></table>
+<p>Однако есть ряд отличий в реализации команды <b>TRUNCATE TABLE</b> по сравнению с использованием оператора <b>DELETE</b>, которые следует иметь в виду:</p>
+<p>1.	Не журнализируется удаление отдельных строк таблицы. В журнал записывается только освобождение страниц, которые были заняты данными таблицы.
+<br>2.	Не отрабатывают триггеры, в частности, триггер на удаление.
+<br>3.  Команда неприменима, если на данную таблицу имеется ссылка по внешнему ключу, и даже если внешний ключ имеет опцию каскадного удаления.
+<br>4.	Значение счетчика (<b><a href="select10.php.html#ident">IDENTITY</a></b>) сбрасывается в начальное значение.
+</p>
+<p><b><i>Пример</i></b>. Требуется удалить из таблицы <i>Laptop</i> все ПК-блокноты с размером экрана менее 12 дюймов.</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+DELETE FROM Laptop
+<br>&nbsp;&nbsp;&nbsp;WHERE screen &lt; 12;
+</td></tr></table>
+<p>Все блокноты можно удалить с помощью оператора</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+DELETE FROM Laptop
+</td></tr></table>
+<p>или</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+TRUNCATE TABLE Laptop
+</td></tr></table>
+<p>Transact-SQL расширяет синтаксис оператора <b>DELETE</b>, вводя дополнительное предложение <b>FROM</b></p>
+<p>FROM &lt;источник табличного типа></p>
+<p>При помощи <i>источника табличного типа</i> можно конкретизировать данные, удаляемые из таблицы в первом предложении <b>FROM</b>.</p>
+<p>При помощи этого предложения можно выполнять соединения таблиц, что логически заменяет использование подзапросов в предложении <b>WHERE</b> для идентификации удаляемых строк.</p>
+<p>Поясним сказанное на примере. Пусть требуется удалить те модели ПК из таблицы <i>Product</i>, для которых нет соответствующих строк в таблице <i>PC</i>.</p>
+<p>Используя стандартный синтаксис, эту задачу можно решить следующим запросом:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+DELETE FROM Product
+<br>&nbsp;&nbsp;&nbsp;WHERE type='pc' AND model NOT IN (SELECT model FROM PC)
+</td></tr></table>
+<p>Заметим, что предикат <i>type</i>='pc' необходим здесь, чтобы не были удалены также модели принтеров и ПК-блокнотов.</p>
+<p>Эту же задачу можно решить с помощью дополнительного предложения <b>FROM</b> следующим образом:</p>
+<TABLE border="0" cellpadding="5" ><tr><td bgcolor="#D3DCE3">
+DELETE FROM Product
+<br>&nbsp;&nbsp;&nbsp;FROM Product pr LEFT JOIN PC ON pr.model=pc.model
+<br>&nbsp;&nbsp;&nbsp;WHERE type='pc' AND pc.model IS NULL
+</td></tr></table>
+<p>Здесь используется внешнее соединение, в результате чего столбец <i>pc.model</i> для моделей ПК, отсутствующих в таблице <i>PC</i>, будет содержать NULL-значение, что и используется для идентификации подлежащих удалению строк.</p>
+</div><center>
+<small>
+
+</small>
+</center>
+<br><br><p></p>
+<!-- раскраска -->
+  	<script type="text/javascript">
+      hljs.initHighlightingOnLoad('sql');
+    </script>
+
+<center>
+<a href="select11.php.html">Назад</a> | <a href="select0.php.html">Содержание</a> | <a href="select13.php.html">Вперед</a><br><br>
+<!-- Яндекс.Директ -->
+<script type="text/javascript">
+yandex_partner_id = 184442;
+yandex_site_bg_color = 'FFFFFF';
+yandex_ad_format = 'direct';
+yandex_font_size = 0.9;
+yandex_direct_type = 'horizontal';
+yandex_direct_border_type = 'block';
+yandex_direct_limit = 2;
+yandex_direct_title_font_size = 2;
+yandex_direct_links_underline = false;
+yandex_direct_header_bg_color = 'FEEAC7';
+yandex_direct_border_color = 'FBE5C0';
+yandex_direct_title_color = '0000CC';
+yandex_direct_url_color = '006600';
+yandex_direct_text_color = '000000';
+yandex_direct_hover_color = '0066FF';
+yandex_direct_sitelinks_color = '0000CC';
+yandex_direct_favicon = true;
+yandex_no_sitelinks = false;
+document.write('<scr'+'ipt type="text/javascript" src="//an.yandex.ru/system/context.js"></scr'+'ipt>');
+</script><br><style>
+span.c4b5cf {
+padding: 5px !important;
+text-align: left !important;
+font-size: 10px !important;
+background-color: transparent !important;
+border: 1px solid #e0e0e0 !important;
+}
+.c4b5cf a {
+color: #6A0000 !important;
+font-weight: normal;
+font-size: 10px !important;
+}
+.c4b5cf .text {
+color: #000000 !important;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.c4b5cf .host {
+color: #006600;
+font-weight: normal;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+</style>
+<span class="c4b5cf">
+
+  <span>
+    <span><a href="http://ecc24.ru/demontazh-konditsionera/">Демонтаж кондиционера</a></span><br />
+<span class="text">Монтаж внешнего блока кондиционера промышленными альпинистами в Москве</span><br />
+<span class="host">ecc24.ru</span>
+
+  </span><br />
+
+  <span>
+    <span><a href="http://vastland.ru/uslugi-po-ozeleneniyu/">Услуги по озеленению</a></span><br />
+<span class="text">Услуги, строительные и отделочные материалы и др. Цены на услуги</span><br />
+<span class="host">vastland.ru</span>
+
+  </span><br />
+
+  <span>
+    
+<span class="text"><a href="http://rosgornospas.ru/oborudovanie/izoliruyushchij-shakhtnyj-samospasatel-na-khimicheski-svyazannom-kislorode" target="_blank">самоспасатель шсс 1м</a></span><br />
+<span class="host">rosgornospas.ru</span>
+
+  </span><br />
+
+</span>
+</center>
+
+<br>
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" valign="middle">
+ <tr>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/" style="font-size: 8pt;">Начало</A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/exercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>SELECT (рейтинговые этапы)</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/dmlexercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>DML</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/developers.php.html" style="font-size: 8pt;">Разработчики</A></td>
+ <td align="left" width="20%">
+<!--begin of Top100 logo-->
+<noindex>
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-gray2.gif" alt="Rambler's Top100" width="88" height="31" border="0"></a>
+</noindex>
+<!--end of Top100 logo -->
+
+<!--LiveInternet counter--><script language="JavaScript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target="_blank"><img src="http://counter.yadro.ru/hit?t16.2;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+'" title="liveinternet.ru: число просмотров и посетителей за сутки и за сегодня" border="0" width="88" height="31"></a>')//--></script>
+<!--/LiveInternet-->
+
+<!--uptolike -->
+<script type="text/javascript">(function(w,doc) {
+if (!w.__utlWdgt ) {
+    w.__utlWdgt = true;
+    var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+    s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+    var h=d[g]('body')[0];
+    h.appendChild(s);
+}})(window,document);
+</script>
+<div data-background-alpha="0.0" data-orientation="horizontal" data-text-color="000000" data-share-shape="round-rectangle" data-buttons-color="ff9300" data-sn-ids="fb.tw.ok.vk.gp.mr." data-counter-background-color="ffffff" data-share-counter-size="10" data-share-size="20" data-background-color="ededed" data-share-counter-type="common" data-pid="1257631" data-counter-background-alpha="1.0" data-share-style="1" data-mode="share" data-following-enable="false" data-like-text-enable="false" data-selection-enable="true" data-icon-color="ffffff" class="uptolike-buttons" ></div>
+<!--uptolike -->
+
+ </td></tr>
+</table>
+</body></html>

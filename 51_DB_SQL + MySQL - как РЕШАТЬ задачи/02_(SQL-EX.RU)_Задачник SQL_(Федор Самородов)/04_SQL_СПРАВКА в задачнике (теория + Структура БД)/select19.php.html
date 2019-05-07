@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<meta charset="windows-1251">
+ <Title>Справка&nbsp;по&nbsp;SQL(DML): Как подсчитать накопительный итог?</Title>
+        <link rel="stylesheet" type="text/css" href="../templates/style.css">
+		<link rel="stylesheet" type="text/css" href="../templates/help.css">
+
+    	<link rel="stylesheet" title="Default" href="../help/styles/default.css">
+        <script type="text/javascript" src="../help/highlight.js"></script>
+        <meta name="Description" content="Самоучитель SQL. Синтаксис операторов SELECT, INSERT, UPDATE, DELETE в примерах и задачах. Дистанционное обучение языку баз данных SQL. Интерактивные упражнения по оператору SELECT языка SQL. Тестирование по SQL. ">
+        <meta name="Keywords" content="SQL, руководство, справочник по SQL, справка по языку SQL, sql запросы, упражнения, тестирование, обучение, операторы sql, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, INSERT, UPDATE, DELETE, структурированный язык запросов">
+        <META NAME="abstract" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <META NAME="title" CONTENT="Справочник по языку манипуляции данными SQL с примерами использования всех синтаксических конструкций стандарта языка DML. Особенности использования в MS SQL Server. Справочник сопровождается упражнениями, выполняемыми в режиме он-лайн на сайте.">
+        <script LANGUAGE="JAVASCRIPT" src="/js/main.js"></script>
+ </head>
+ <body bgcolor="#F5F5F5">
+<!-- LM -->
+<script async="async" src="https://w.uptolike.com/widgets/v1/zp.js?pid=48720"></script>
+<!-- LM -->
+
+ <A name="ref_beg"></a>
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_76084"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 76084,
+            place: "advertur_76084",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+<form name="frmtpl">
+<table width="98%" border="0" cellpadding="5" align="center">
+    <tr>
+        <td width="33%" bgcolor="#CCCCCC" valign="middle"><b><a class='none' href="/help/">Синтаксис SQL</a></b></td>
+        <td width="33%" bgcolor="#CCCCCC" align="center" valign="middle">
+         Language&nbsp;<select name="lsttpl" OnChange="Sel_Lang(document.frmtpl.lsttpl.selectedIndex)"><option value="0" selected> Русский <option value="1" > English </select>
+        </td>
+        <td width="33%" bgcolor="#CCCCCC" align="right" valign="middle"><a href=select0.php.html>Оглавл.</a>&nbsp;<a href=select1.php.html>1</a>&nbsp;<a href=select2.php.html>2</a>&nbsp;<a href=select3.php.html>3</a>&nbsp;<a href=select4.php.html>4</a>&nbsp;<a href=select5.php.html>5</a>&nbsp;<a href=select6.php.html>6</a>&nbsp;<a href=select7.php.html>7</a>&nbsp;<a href=select8.php.html>8</a>&nbsp;<a href=select9.php.html>9</a>&nbsp;<a href=select10.php.html>10</a>&nbsp;<a href=select11.php.html>11</a>&nbsp;<a href=select12.php.html>12</a>&nbsp;<a href=select13.php.html>13</a>&nbsp;<a href=select14.php.html>14</a>&nbsp;<a href=select15.php.html>15</a>&nbsp;<a href=select16.php.html>16</a>&nbsp;<a href=select17.php.html>17</a>&nbsp;<a href=select18.php.html>18</a>&nbsp;[<b>19</b>]&nbsp;<a href=select20.php.html>20</a>&nbsp;
+<!--Rambler Top100-->
+<div style="display:none">
+<script id="top100Counter" type="text/javascript" src="http://cnt.rambler.ru/top100.jcn?718545">
+</script>
+<noscript><a href="http://top100.rambler.ru/top100/">
+<img src="http://cnt.rambler.ru/top100.cnt?718545" alt="Rambler's Top100" width="81" height="63" border="0" /></a></noscript>
+</div>
+<!--end of Top100-->
+        </td>
+</tr>
+</table>
+</form><h1>Как подсчитать накопительный итог?</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="let" href="/users_page.php.html?uid=69553">Красовский Е.А.</a> (05-02-2011)</small>
+<p class="par">Часто бывает необходимо для каждой строки упорядоченной таблицы подсчитать сумму значений числового столбца из строк, выше- или нижестоящих по порядку, включая данную. Это и есть задача расчета накопительного итога. Например, из таблицы, отсортированной по столбцу time:</p>
+<pre class="res">
+<b><u>time   	var </u> </b>
+1	15
+2	10
+4	13
+7	11
+</pre>
+<p class="par">нужно получить следующую таблицу:</p>
+<pre class="res">
+<b><u>time	var	total_sum</u> </b>
+1	15	15
+2	10	25
+4	13	38
+7	11	49
+</pre>
+<p class="par">Для лучшего понимания поставим более конкретную задачу для базы данных "Окраска":</p>
+<h3>Задача 1</h3>
+<p class="for">Для каждого момента времени, когда происходила окраска квадрата с q_id = 10, найти суммарное количество потраченной на него краски к этому моменту времени.</p>
+<p class="par">Таблица utB включает столбцы b_datetime, b_vol. Для каждого значения X из столбца b_datetime, необходимо подсчитать сумму b_vol по всем строкам, где момент времени  b_datetime  &le; X.</p>
+<p class="par">Решим задачу двумя самыми распространенными методами.</p>
+
+<!-- 728*90 Advertur.ru start -->
+<div id="advertur_2087"></div><script type="text/javascript">
+    (function(w, d, n) {
+        w[n] = w[n] || [];
+        w[n].push({
+            section_id: 2087,
+            place: "advertur_2087",
+            width: 728,
+            height: 90
+        });
+    })(window, document, "advertur_sections");
+</script>
+<script type="text/javascript" src="//ddnk.advertur.ru/v1/s/loader.js" async></script>
+<!-- 728*90 Advertur.ru end -->
+
+<h4>1) Подзапрос в предложении SELECT</h4>
+<p class="par">В этом методе предполагается вычисление накопительного итога подзапросом. Поспешив, можно написать следующий запрос:</p>
+<pre><code>
+SELECT b_datetime,
+	(
+		SELECT SUM(T1.b_vol)
+		FROM utB T1
+		WHERE T1.b_datetime &lt;= T2.b_datetime
+		AND T1.b_q_id = 10
+	) total_vol
+FROM utB T2
+WHERE b_q_id = 10;
+</code></pre>
+<p class="par">Однако этот запрос неверный! Дело в том, что квадрат с номером 10 одновременно могли окрашивать разные баллончики, в итоге при таких окрасках получим дубликаты строк:</p>
+<pre class="res">
+<b><u>b_datetime		total_vol</u> </b>
+<b>2003-01-01 01:12:31.000 255
+2003-01-01 01:12:31.000 255</b>
+2003-01-01 01:12:33.000	265
+2003-01-01 01:12:34.000	275
+2003-01-01 01:12:35.000	520
+2003-01-01 01:12:36.000	765
+</pre>
+<p class="par">Ошибка ликвидируется добавлением DISTINCT в первый SELECT, но тогда для каждой строки с одинаковыми значениями b_datetime будет вычисляться подзапрос, а лишь затем устраняться дубликаты. Поэтому в данном случае лучше исключить дубликаты заранее. Например, так:</p>
+<pre><code>
+SELECT b_datetime,
+	(
+		SELECT SUM(T1.b_vol)
+		FROM utB T1
+		WHERE T1.b_datetime &lt;= T2.b_datetime
+		AND T1.b_q_id = 10
+	) total_vol
+FROM
+(
+	SELECT DISTINCT b_datetime --исключаем дубликаты
+	FROM utB
+	WHERE b_q_id = 10
+) T2;
+</code></pre>
+<h4>2) Декартово произведение</h4>
+<p class="par">Метод заключается в том, что таблица соединяется сама с собой по условию X >= b_datetime. Затем считается сумма b_vol с группировкой по b_datetime. При этом значения X не должны повторяться, иначе в результате одни и те же строки попадут в итоговую сумму несколько раз! Выглядит это следующим образом:</p>
+
+<pre><code>
+SELECT T2.b_datetime, SUM(T1.b_vol) total_vol
+FROM utB T1
+	INNER JOIN
+	(
+		SELECT DISTINCT b_datetime	--исключаем дубликаты
+		FROM utB
+		WHERE b_q_id = 10 --рассматриваем только квадрат с b_q_id = 10
+	) T2
+	ON T1.b_datetime &lt;= T2.b_datetime
+WHERE T1.b_q_id = 10
+GROUP BY T2.b_datetime;
+</code></pre>
+
+<p class="par">Если в таблице Т2 убрать DISTINCT, то получим следующий ошибочный результат:</p>
+<pre class="res">
+<b><u>b_datetime		total_vol</u> </b>
+<b>2003-01-01 01:12:31.000	510</b>
+2003-01-01 01:12:33.000	265
+2003-01-01 01:12:34.000	275
+2003-01-01 01:12:35.000	520
+2003-01-01 01:12:36.000	765
+</pre>
+
+<p class="par">Рассмотренный пример специально подобран немного выходящий за рамки темы. Потому, как почти всегда, параллельно с вычислением накопительного итога, необходимо следить за разного рода нюансами. Что и было проделано.</p>
+<h2>Дополнение</h2>
+<p class="par">Оба метода требуют нескольких чтений из таблицы. Иногда этого можно избежать, используя генерацию числовой последовательности. Для дальнейших рассуждений переформулируем задачу.</p>
+<h3>Задача 2</h3>
+<p class="for">Каждому моменту времени, когда совершалась окраска квадрата с q_id = 10, сопоставить номер окраски в порядке возрастания b_datetime. Для каждого такого номера найти суммарное количество потраченной на квадрат краски к этому моменту времени.</p>
+<p class="par">Теперь, если бы мы использовали первый метод, то соединяли бы таблицы с условием не на время, а на номер. Часто так и бывает. И реализация первого метода выглядела бы так:</p>
+
+<pre><code>SELECT T2.rn, SUM(T1.b_vol) total_vol
+FROM
+(
+	SELECT ROW_NUMBER() OVER(ORDER BY b_datetime) rn,
+		SUM(b_vol)b_vol --достаточно вычислить только для одной таблицы
+	FROM utB WHERE b_q_id = 10
+	GROUP BY b_datetime --исключаем дубликаты
+)T1
+INNER JOIN
+(
+	SELECT ROW_NUMBER() OVER(ORDER BY b_datetime) rn
+	FROM utB WHERE b_q_id = 10
+	GROUP BY b_datetime
+)T2
+ON T1.rn &lt;= T2.rn
+GROUP BY T2.rn;
+</code></pre>
+<p class="par">Здесь использована функция Transact-SQL <a class="let" href="http://www.sql-tutorial.ru/ru/book_row_number_function.html">ROW_NUMBER()</a> для нумерации строк.</p>
+<p class="par">Заметим, что таблица T2 представляет собой последовательность натуральных чисел, и для её создания вовсе не обязательно производить чтение из utB! Достаточно просто сгенерировать числовую последовательность. Единственное, что препятствует этому - мы не знаем, сколько членов в последовательности нам понадобится. Зато мы знаем, что b_vol - целое, больше нуля, а количество краски в квадрате не превышает 765. Поэтому достаточно сгенерировать 765 членов. Количество членов можно выяснить и подзапросом, в некоторых случаях это полезно. Всё зависит от задачи. В итоге получим следующий запрос:</p>
+<pre><code>
+SELECT T2.rn, SUM(T1.b_vol) total_vol
+FROM
+(
+SELECT rn, b_vol, COUNT(*)OVER()cnt_rec -- вычисляем количество строк
+FROM
+	(
+		SELECT ROW_NUMBER() OVER(ORDER BY b_datetime) rn,
+			SUM(b_vol)b_vol
+		FROM utB WHERE b_q_id = 10
+		GROUP BY b_datetime
+	)T
+)T1
+INNER JOIN
+(
+	SELECT a + 10*b + 100*c rn
+	FROM
+		(SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4
+		UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8
+		UNION SELECT 9 UNION SELECT 10)AA,
+
+		(SELECT 0 b UNION SELECT 1 UNION SELECT 2 UNION SELECT 3
+		UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7
+		UNION SELECT 8 UNION SELECT 9)BB,
+
+		(SELECT 0 c UNION SELECT 1 UNION SELECT 2 UNION SELECT 3
+		UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
+		UNION SELECT 7)CC
+
+)T2 -- последовательность (1 .. 800)
+ON T1.rn &lt;= T2.rn
+AND T2.rn &lt;= T1.cnt_rec -- ограничиваем количество строк T2 количеством строк T1
+GROUP BY T2.rn;
+</code></pre>
+<p class="par">В данном случае применение такого приема конечно не оправдано. Но если вместо T1 будет таблица, полученная в результате выполнения сложного ресурсоёмкого запроса, то возможность избежать её соединения с собой (её второе вычисление)  значительно повысит производительность. А данный пример взят для простоты изложения.</p><p></p>
+<small>
+
+</small>
+<p></p>
+
+<p></p>
+<!-- раскраска -->
+  	<script type="text/javascript">
+      hljs.initHighlightingOnLoad('sql');
+    </script>
+
+<center>
+<a href="select18.php.html">Назад</a> | <a href="select0.php.html">Содержание</a> | <a href="select20.php.html">Вперед</a><br><br>
+<!-- Яндекс.Директ -->
+<script type="text/javascript">
+yandex_partner_id = 184442;
+yandex_site_bg_color = 'FFFFFF';
+yandex_ad_format = 'direct';
+yandex_font_size = 0.9;
+yandex_direct_type = 'horizontal';
+yandex_direct_border_type = 'block';
+yandex_direct_limit = 2;
+yandex_direct_title_font_size = 2;
+yandex_direct_links_underline = false;
+yandex_direct_header_bg_color = 'FEEAC7';
+yandex_direct_border_color = 'FBE5C0';
+yandex_direct_title_color = '0000CC';
+yandex_direct_url_color = '006600';
+yandex_direct_text_color = '000000';
+yandex_direct_hover_color = '0066FF';
+yandex_direct_sitelinks_color = '0000CC';
+yandex_direct_favicon = true;
+yandex_no_sitelinks = false;
+document.write('<scr'+'ipt type="text/javascript" src="//an.yandex.ru/system/context.js"></scr'+'ipt>');
+</script><br><style>
+span.c4b5cf {
+padding: 5px !important;
+text-align: left !important;
+font-size: 10px !important;
+background-color: transparent !important;
+border: 1px solid #e0e0e0 !important;
+}
+.c4b5cf a {
+color: #6A0000 !important;
+font-weight: normal;
+font-size: 10px !important;
+}
+.c4b5cf .text {
+color: #000000 !important;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.c4b5cf .host {
+color: #006600;
+font-weight: normal;
+font-size: 10px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+</style>
+<span class="c4b5cf">
+
+  <span>
+  
+  
+  <style>
+DIV {
+    width: 90%;
+    position: relative;
+    left: 5%;
+	
+    COLOR: black;
+    FONT-FAMILY: Verdana,Arial,Helvetica;
+    FONT-SIZE: 12px;
+    FONT-WEIGHT: normal;
+    TEXT-ALIGN: justify;
+    TEXT-DECORATION: none;
+}
+
+H2 {
+    COLOR: #004040;
+    FONT-FAMILY: Arial,Helvetica;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold;
+    LINE-HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    text-decoration: none;
+}
+h2 {
+    display: block;
+    
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+}
+
+.keyword {
+    color: #00f;
+}
+</style>
+
+
+    <span><a href="http://www.pokrovgazon.ru/">Производство газона</a></span><br />
+<span class="text">Устройство газона, параметры, влияющие на качество. Описание. Стоимость</span><br />
+<span class="host">pokrovgazon.ru</span>
+
+  </span><br />
+
+  <span>
+    <span><a href="https://satec-global.ru/blog/pribory-satec/uchyet-po-otdelnym-potrebitelyam-i-energobalans-po-vsemu-predpriyatiyu/">Учет расхода электроэнергии предприятии</a></span><br />
+<span class="text">Управленческий, финансовый и бухгалтерский учет. Анализ ситуации в бизнесе</span><br />
+<span class="host">satec-global.ru</span>
+
+  </span><br />
+
+</span>
+</center>
+
+<br>
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" valign="middle">
+ <tr>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/" style="font-size: 8pt;">Начало</A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/exercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>SELECT (рейтинговые этапы)</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/dmlexercises.php.html" target="exercises" style="font-size: 8pt;">Упражнения <b>DML</b></A></td>
+ <td align="center" width="15%" onmouseout="this.style.backgroundColor='#CCCCCC'" onmouseover="this.style.backgroundColor='#DDDDDD'"><A href="/developers.php.html" style="font-size: 8pt;">Разработчики</A></td>
+ <td align="left" width="20%">
+<!--begin of Top100 logo-->
+<noindex>
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-gray2.gif" alt="Rambler's Top100" width="88" height="31" border="0"></a>
+</noindex>
+<!--end of Top100 logo -->
+
+<!--LiveInternet counter--><script language="JavaScript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target="_blank"><img src="http://counter.yadro.ru/hit?t16.2;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+'" title="liveinternet.ru: число просмотров и посетителей за сутки и за сегодня" border="0" width="88" height="31"></a>')//--></script>
+<!--/LiveInternet-->
+
+<!--uptolike -->
+<script type="text/javascript">(function(w,doc) {
+if (!w.__utlWdgt ) {
+    w.__utlWdgt = true;
+    var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+    s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+    var h=d[g]('body')[0];
+    h.appendChild(s);
+}})(window,document);
+</script>
+<div data-background-alpha="0.0" data-orientation="horizontal" data-text-color="000000" data-share-shape="round-rectangle" data-buttons-color="ff9300" data-sn-ids="fb.tw.ok.vk.gp.mr." data-counter-background-color="ffffff" data-share-counter-size="10" data-share-size="20" data-background-color="ededed" data-share-counter-type="common" data-pid="1257631" data-counter-background-alpha="1.0" data-share-style="1" data-mode="share" data-following-enable="false" data-like-text-enable="false" data-selection-enable="true" data-icon-color="ffffff" class="uptolike-buttons" ></div>
+<!--uptolike -->
+
+ </td></tr>
+</table>
+</body></html>
